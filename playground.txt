@@ -1,0 +1,3 @@
+
+
+create database <db_name> --> pls make database with name <db_name>

@@ -22,3 +22,11 @@ def loading_animation():
     else:
         os.system("clear")
 
+def check_query(ch):
+    query_checker=ch.split()
+
+    check_list=[]
+
+    for i in query_checker:
+        check_list.append(i.lower())
+    return check_list

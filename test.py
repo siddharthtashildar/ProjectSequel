@@ -85,11 +85,13 @@
 #     if a:
 #         print("Successfully Converted!")
 
-text=input("Enter: ")
+# text=input("Enter: ")
 
-if text == '':
-    print(text)
-    print("This works!")
-else:
-    print("This doesnt work!")
+# if text == '':
+#     print(text)
+#     print("This works!")
+# else:
+#     print("This doesnt work!")
 
+list=['pls','make', 'database','with','name','db_name']
+print(list[:-1])
