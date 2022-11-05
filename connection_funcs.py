@@ -19,7 +19,7 @@ def connect_Manual():
     # User='uodksj20ljf64ecd'
     # password='KqhImxBuNUQFxIDekwVi'
     # Database='bbvudwhkuqtqhqauukg6'
-    
+    db=''
     try:
         if Database == '' :
             db= mysql.connect(host=Host, user=User, password=password)
@@ -49,7 +49,7 @@ def connect_localhost():
     User='root'
     password='blackpearl'
     Database=input("Enter Database name(optional hit enter to skip and connect): ")
-
+    db=''
     try:
         if Database == '' :
             db= mysql.connect(host=Host, user=User, password=password)

@@ -1,5 +1,6 @@
 from connection_funcs import *
 from misc_funcs import *
+from queries import *
 import os
 
 print()
@@ -34,8 +35,17 @@ elif connection_method == '3':
 print("Welcome to the Party!")
 print()
 
-while True:
+loop=True
+
+while loop:
     ch=input("Project_Sequel> ")
 
-    if ch == 'Quit' or 'q':
-        break
+    # if ['pls','make', 'database','with','name'] in check_query(ch) :
+    #     ex=create_db(database,ch)
+    #     if ex:
+    #         dbname=check_query()
+    #         print(f"Successfully created Database named: {dbname[5]}")
+    #         continue
+
+    # elif ch == 'Quit' or 'q':
+    #     break
