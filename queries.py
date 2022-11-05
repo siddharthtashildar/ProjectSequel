@@ -20,14 +20,32 @@ def show_db(db):
     dbcursor=db.cursor()
     dbcursor.execute("Show databases")
     table=dbcursor.fetchall()
-    Num=1
-    print()
-    print("The available Database are:")
+    list=[]
+
     for i in table:
         for j in i:
-            dude=str(Num) + ") " + j
-            print(dude)
-            Num+=1
-    print(f"Total databases present: {Num-1}")
-    print()
-    return
+            list.append(j)
+
+    return list
+
+def use_db(db,db_name):
+    db.reconnect()
+    if db_name in show_db(db):
+        dbcursor=db.cursor()
+        dbcursor.execute(f"use {db_name}")
+        return db_name
+    else:
+        return f"Database named: {db_name} doesnt exist!"
+
+def show_tables(db,db_name):
+    db.reconnect()
+    dbname=use_db(db,db_name)
+    dbcursor=db.cursor()
+    dbcursor.execute("Show tables")
+    table=dbcursor.fetchall()
+    list=[]
+    for i in table:
+        for j in i:
+            list.append(j)
+            
+    return list

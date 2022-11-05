@@ -12,4 +12,17 @@ show databases --> list databases
                    list database
                    show db
 
+use <db_name> --> switch database <db_name>
+                  sw database <db_name>
+                  sh database <db_name>
+                  switch db <db_name>
+                  sw db <db_name>
+                  sh db <db_name>
+
+show tables   -->  list tables
+                   lt
+                   list tbl
+                   show tables
+                   list table
+                   show tbl
     
