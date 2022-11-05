@@ -1,3 +1,15 @@
 
 
 create database <db_name> --> pls make database with name <db_name>
+                              pls make db with name <db_name>
+                              pls mk db with name <db_name>
+                              pls mk database with name <db_name>
+
+show databases --> list databases
+                   ld
+                   list db
+                   show databases
+                   list database
+                   show db
+
+    

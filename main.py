@@ -35,17 +35,28 @@ elif connection_method == '3':
 print("Welcome to the Party!")
 print()
 
-loop=True
+#-------LIST TO CHECK QUERIES-------#
+create_db_list=[['pls','make', 'database','with','name'],
+                ['pls','make', 'db','with','name'],
+                ['pls','mk', 'db','with','name'],
+                ['pls','mk', 'database','with','name']]
 
-while loop:
+show_db_list=['list databases','ld','list db', 'show databases','list database','show db']
+
+
+ch=''
+quit=['q','Quit','quit','Q']
+
+while ch not in quit  :
+
     ch=input("Project_Sequel> ")
 
-    # if ['pls','make', 'database','with','name'] in check_query(ch) :
-    #     ex=create_db(database,ch)
-    #     if ex:
-    #         dbname=check_query()
-    #         print(f"Successfully created Database named: {dbname[5]}")
-    #         continue
+    if ch.lower().split()[:-1] in create_db_list :
+        ex=create_db(database,ch)
+        if ex:
+            print(f"Successfully created Database named: {ch.split()[5]}")
+    
+    elif ch.lower() in show_db_list:
+        show_db(database)
 
-    # elif ch == 'Quit' or 'q':
-    #     break
+    

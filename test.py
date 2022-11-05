@@ -92,6 +92,7 @@
 #     print("This works!")
 # else:
 #     print("This doesnt work!")
-
-list=['pls','make', 'database','with','name','db_name']
-print(list[:-1])
+create_db_list=[['pls','make', 'database','with','name'],['pls','mk', 'database','with','name'],['pls','make', 'db','with','name'],['pls','mk', 'db','with','name']]
+ch='Pls mk db with nAMe db'
+if ch.lower().split()[:-1] in create_db_list :
+        print("We in If")
