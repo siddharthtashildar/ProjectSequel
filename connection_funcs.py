@@ -2,12 +2,12 @@
 import mysql.connector as mysql
 from mysql.connector import errorcode
 from urllib.parse import urlparse
-
+import pwinput
 
 def connect_Manual():
     Host=input("Enter Host: ")
     User=input("Enter User: ")
-    password=input("Enter Password: ")
+    password = pwinput.pwinput(prompt='Enter Password: ')
     Database=input("Enter Database(optional): ")
 
     #Host='localhost'
@@ -47,7 +47,8 @@ def connect_Url():
 def connect_localhost():
     Host='localhost'
     User='root'
-    password='blackpearl'
+    password = pwinput.pwinput(prompt='Enter your Localhost Password: ')
+    #password='blackpearl'
     Database=input("Enter Database name(optional hit enter to skip and connect): ")
     db=''
     try:

@@ -49,3 +49,6 @@ def show_tables(db,db_name):
             list.append(j)
             
     return list
+
+#def display_data(db,query):
+

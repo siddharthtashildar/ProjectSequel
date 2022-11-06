@@ -3,6 +3,7 @@ from misc_funcs import *
 from queries import *
 import os
 
+
 print()
 print("Welcome To Project Sequel!")
 print()
@@ -36,10 +37,10 @@ print("Welcome to the Party!")
 print()
 
 #-------LIST TO CHECK QUERIES-------#
-create_db_list=[['pls','make', 'database','with','name'],
-                ['pls','make', 'db','with','name'],
-                ['pls','mk', 'db','with','name'],
-                ['pls','mk', 'database','with','name']]
+create_db_list=[['make', 'database','with','name'],
+                ['make', 'db','with','name'],
+                ['mk', 'db','with','name'],
+                ['mk', 'database','with','name']]
 
 show_db_list=['list databases','ld','list db', 'show databases','list database','show db']
 
@@ -62,7 +63,7 @@ while ch not in quit  :
     if ch.lower().split()[:-1] in create_db_list :
         ex=create_db(database,ch)
         if ex:
-            print(f"Successfully created Database named: {ch.split()[5]}")
+            print(f"Successfully created Database named: {ch.split()[4]}")
     
     elif ch.lower() in show_db_list:
         print()
