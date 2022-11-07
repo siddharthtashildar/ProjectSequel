@@ -33,6 +33,7 @@ elif connection_method == '3':
     loading_animation()
 
 
+
 print("Welcome to the Party!")
 print()
 
@@ -52,6 +53,11 @@ use_db_list=[['switch','database'],
              ['sh','db']]
 
 show_table_list=['list tables','lt','list tbl', 'show tables','list table','show tbl']
+
+create_table_list=[['make','table','with','name'],
+                   ['make','tbl','with','name'],
+                   ['mk','tbl','with','name'],
+                   ['mk','table','with','name']]
 
 ch=''
 quit=['q','Quit','quit','Q']
