@@ -19,6 +19,11 @@ use <db_name> --> switch database <db_name>
                   sw db <db_name>
                   sh db <db_name>
 
+Current database --> curr database
+                     current database
+                     current db
+                     curr db
+
 show tables   -->  list tables
                    lt
                    list tbl
@@ -26,4 +31,21 @@ show tables   -->  list tables
                    list table
                    show tbl
 
- 
+create table <table_name> (cols) --> make table with name <table_name> (cols)
+                                     mk table with name <table_name> (cols)
+                                     make tbl with name <table_name> (cols)
+                                     mk tbl with name <table_name> (cols)
+
+describe <table_name> --> specifiy <table_name>
+                          detail <table_name>
+                          define <table_name>
+                          represent <table_name>
+                          describe <table_name>
+                          spec <table_name>
+                          dtl <table_name>
+                          def <table_name>
+                          rep <table_name>
+                          desc <table_name>
+
+select * from <table_name> --> from <table_name> display <cols> with <field> == <some_data> 
+

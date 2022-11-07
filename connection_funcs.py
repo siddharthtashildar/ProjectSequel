@@ -47,8 +47,8 @@ def connect_Url():
 def connect_localhost():
     Host='localhost'
     User='root'
-    password = pwinput.pwinput(prompt='Enter your Localhost Password: ')
-    #password='blackpearl'
+    #password = pwinput.pwinput(prompt='Enter your Localhost Password: ')
+    password='blackpearl'
     Database=input("Enter Database name(optional hit enter to skip and connect): ")
     db=''
     try:
