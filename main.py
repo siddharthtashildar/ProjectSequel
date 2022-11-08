@@ -136,14 +136,7 @@ while ch not in quit  :
 
     elif ch.lower().split()[0] in desc_table_list:
         print()
-        num=1
-        table_structure=desc_table(database,ch,current_db)
-        for i in table_structure:
-            print(i)
-            num += 1
-        print()
-        print(f"Total Columns present in {ch.split()[1]}: {num-1}")
-        print()
+        desc_table(database,ch,current_db)
     
     elif ch.lower().startswith('from'):
         num=1

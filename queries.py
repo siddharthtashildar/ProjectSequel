@@ -72,12 +72,24 @@ def desc_table(db,query,db_name):
     dbname=use_db(db,db_name)
     if tbl_name in show_tables(db,db_name):
         dbcursor=db.cursor()
-        dbcursor.execute(f"desc {tbl_name}")
-        table=dbcursor.fetchall()
-        # list=[]
-        # for i in table:
-        #     list.append(i)
-        return table
+        dbcursor.execute(f'desc {tbl_name}')
+        col=dbcursor.description
+        data=dbcursor.fetchall()
+        clist=[]
+        for x in col:
+            clist.append(x[0])
+
+        for i in data:
+            print(f'{clist[0]} --> {i[0]}')
+            print(f'{clist[1]} --> {i[1]}')
+            print(f'{clist[2]} --> {i[2]}')
+            print(f'{clist[3]} --> {i[3]}')
+            print(f'{clist[4]} --> {i[4]}')
+            print(f'{clist[5]} --> {i[5]}')
+            print()
+        print()
+        print(f"Total Columns present in {tbl_name}: {len(data)}")
+        print()
     else:
         print(f'No table named {tbl_name} prensent in {db_name}')
 

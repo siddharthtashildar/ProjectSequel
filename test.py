@@ -1,5 +1,5 @@
 # #IMPORTS
-# import mysql.connector as mysql1
+import mysql.connector as mysql1
 # import csv
 
 # def connect_db():
@@ -93,9 +93,23 @@
 # else:
 #     print("This doesnt work!")
 
-create_db_list=[['make', 'database','with','name'],
-                ['make', 'db','with','name'],
-                ['mk', 'db','with','name'],
-                ['mk', 'database','with','name']]
 
-print(len(create_db_list))
+db= mysql1.connect(host='localhost', user='root', password='blackpearl', database='firstdb')
+dbcursor=db.cursor()
+query=f"desc stalin"
+dbcursor.execute(query)
+col=dbcursor.description
+data=dbcursor.fetchall()
+clist=[]
+for x in col:
+    clist.append(x[0])
+
+for i in data:
+    print(f'{clist[0]} --> {i[0]}')
+    print(f'{clist[1]} --> {i[1]}')
+    print(f'{clist[2]} --> {i[2]}')
+    print(f'{clist[3]} --> {i[3]}')
+    print(f'{clist[4]} --> {i[4]}')
+    print(f'{clist[5]} --> {i[5]}')
+    print()
+
