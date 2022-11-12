@@ -37,7 +37,7 @@ def use_db(db,db_name):
         db.commit()
         return db_name
     else:
-        return f"Database named: {db_name} doesnt exist!"
+        return f"Database named {db_name} doesnt exist!"
 
 def show_tables(db,db_name):
     db.reconnect()
@@ -70,26 +70,21 @@ def desc_table(db,query,db_name):
     db.reconnect()
     tbl_name=query.split()[1]
     dbname=use_db(db,db_name)
+    num=0
+    dlist=[]
     if tbl_name in show_tables(db,db_name):
         dbcursor=db.cursor()
         dbcursor.execute(f'desc {tbl_name}')
-        col=dbcursor.description
+        col=dbcursor.column_names
         data=dbcursor.fetchall()
-        clist=[]
-        for x in col:
-            clist.append(x[0])
-
         for i in data:
-            print(f'{clist[0]} --> {i[0]}')
-            print(f'{clist[1]} --> {i[1]}')
-            print(f'{clist[2]} --> {i[2]}')
-            print(f'{clist[3]} --> {i[3]}')
-            print(f'{clist[4]} --> {i[4]}')
-            print(f'{clist[5]} --> {i[5]}')
-            print()
-        print()
-        print(f"Total Columns present in {tbl_name}: {len(data)}")
-        print()
+            rec=list(i)
+            rec[1]=rec[1].decode()
+            dlist.append(rec)
+            num += 1
+        return dlist,col,num
+
+
     else:
         print(f'No table named {tbl_name} prensent in {db_name}')
 
@@ -101,28 +96,36 @@ def display_data(db,query,db_name):
     column=query.partition('display')[2].partition('with')[0]
     clauses=query.partition('with')[2]
     list=[]
+    col=''
+    num=0
     if tbl_name in show_tables(db,db_name):
         dbcursor=db.cursor()
         if 'with' in user_query:
             dbcursor.execute(f"select {column} from {tbl_name} where {clauses}")
+            col=dbcursor.column_names
             table=dbcursor.fetchall()
             for i in table:
                 list.append(i)
-            return list
+                num += 1
+            return list,col,num
         else:
             order=['order','by']
             if order in user_query:
                 dbcursor.execute(f"select {column} from {tbl_name} order by {query.partition('order by')[2]}")
+                col=dbcursor.column_names
                 table=dbcursor.fetchall()
                 for i in table:
                     list.append(i)
-                return list
+                    num += 1
+                return list,col,num
             else:
                 dbcursor.execute(f"select {column} from {tbl_name}")
+                col=dbcursor.column_names
                 table=dbcursor.fetchall()
                 for i in table:
                     list.append(i)
-                return list
+                    num += 1
+                return list,col,num
     else:
         print(f"No Table named {tbl_name} present in {db_name}")   
         

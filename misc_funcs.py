@@ -22,11 +22,12 @@ def loading_animation():
     else:
         os.system("clear")
 
-def check_query(ch):
-    query_checker=ch.split()
+def check_create_table(ch,list):
+    for i in list:
+        if ch.lower().startswith(i):
+            return True
 
-    check_list=[]
-
-    for i in query_checker:
-        check_list.append(i.lower())
-    return check_list
+def check_desc_table(ch,list):
+    for i in list:
+        if ch.lower().startswith(i):
+            return True

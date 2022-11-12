@@ -1,7 +1,7 @@
 from connection_funcs import *
 from misc_funcs import *
 from queries import *
-import os
+from tabulate import tabulate
 
 
 print()
@@ -111,10 +111,7 @@ while ch not in quit  :
         print(f"Total Tables present in {current_db}: {num-1}")
         print()
 
-    elif (ch.lower().startswith(create_table_list[0]) or 
-          ch.lower().startswith(create_table_list[1]) or 
-          ch.lower().startswith(create_table_list[2]) or 
-          ch.lower().startswith(create_table_list[3])):
+    elif check_create_table(ch,create_table_list):
           ex=create_table(database,ch,current_db,ch.split()[4])
           if ex:
             print(f"Created Table named {ch.split()[4]} in database {current_db}!")
@@ -134,17 +131,19 @@ while ch not in quit  :
             print("(use 'switch db' to switch database or use 'mk db with name' to create a new Database)")
             print()
 
-    elif ch.lower().split()[0] in desc_table_list:
+    elif check_desc_table(ch,desc_table_list):
         print()
-        desc_table(database,ch,current_db)
+        data,cols,num=desc_table(database,ch,current_db)
+        print(tabulate(data,headers=cols,tablefmt="github"))
+        print()
+        print(f"Total Columns present in {current_db}: {num}")
+        print()
     
     elif ch.lower().startswith('from'):
-        num=1
+        
         print()
-        data=display_data(database,ch,current_db)
-        for i in data:
-            print(i)
-            num += 1
+        data,cols,num=display_data(database,ch,current_db)
+        print(tabulate(data,headers=cols,tablefmt="github"))
         print()
-        print(f"Total Records present in {current_db}: {num-1}")
+        print(f"Total Records present in {current_db}: {num}")
         print()
