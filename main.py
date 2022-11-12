@@ -10,12 +10,13 @@ print()
 print()
 print('How do you want to Login?')
 print('1.Manual')
-print('2.Using a connection url')
+print('2.Using CommandLine Method')
 print('3.Defualt LocalHost')
 connection_method=input("Enter your choice(1/2/3) or press q to quit: ")
 print()
 
 database=''
+current_db=''
 
 if connection_method == '1':
     database=connect_Manual()
@@ -23,7 +24,7 @@ if connection_method == '1':
     loading_animation()
 
 elif connection_method == '2':
-    database=connect_Url()
+    database=connect_cmd()
     print()
     loading_animation()
 
@@ -35,6 +36,9 @@ elif connection_method == '3':
 
 
 print("Welcome to the Party!")
+print()
+print("Use 'help' or 'h' to list all commands available! ")
+print("Get Started- Use 'ld' to display all database present or use 'make db with name' to create new database!")
 print()
 
 #-------LIST TO CHECK QUERIES-------#
@@ -67,7 +71,7 @@ desc_table_list=['specifiy' , 'detail', 'define' ,'represent' ,'describe', 'spec
 
 
 ch=''
-current_db=''
+
 while ch not in quit  :
 
     ch=input("Project_Sequel> ")
