@@ -69,6 +69,9 @@ current_db_list=['curr database','current database','current db','curr db']
 
 desc_table_list=['specifiy' , 'detail', 'define' ,'represent' ,'describe', 'spec', 'dtl', 'def' ,'rep' ,'desc', 'df' ]
 
+drop_db_list=['delete database','remove database','del database','rm database','del db','rm db']
+
+drop_tbl_list=['delete table','remove table','del table','rm table','del tbl','rm tbl']
 
 ch=''
 
@@ -79,7 +82,7 @@ while ch not in quit  :
     if ch.lower().split()[:-1] in create_db_list :
         ex=create_db(database,ch)
         if ex:
-            print(f"Successfully created Database named: {ch.split()[4]}")
+            print(f"Success--> created Database named: {ch.split()[4]}!")
     
     elif ch.lower() in show_db_list:
         print()
@@ -118,9 +121,9 @@ while ch not in quit  :
     elif check_create_table(ch,create_table_list):
           ex=create_table(database,ch,current_db,ch.split()[4])
           if ex:
-            print(f"Created Table named {ch.split()[4]} in database {current_db}!")
+            print(f"Success--> Created Table named {ch.split()[4]} in database {current_db}!")
           else:
-            print(ex)
+            print(f' Error--> {ex}')
         
     elif ch.lower() in current_db_list:
         if current_db != '':
@@ -151,3 +154,38 @@ while ch not in quit  :
         print()
         print(f"Total Records present in {current_db}: {num}")
         print()
+    
+    elif check_drop_db(ch,drop_db_list):
+        ex=drop_db(database,ch)
+        if ex == True:
+            print()
+            print(f'Success--> deleted database with name {ch.split()[2]}')
+            print()
+        else:
+            print()
+            print(f' Error--> {ex}')
+            print()
+
+    elif check_drop_tbl(ch,drop_tbl_list):
+        ex=drop_table(database,ch,current_db)
+        if ex == True:
+            print()
+            print(f'Success--> deleted table with name {ch.split()[2]} from {current_db}!')
+            print()
+        else:
+            print()
+            print(f' Error--> {ex}')
+            print()
+    
+    elif ch.lower().startswith('add data'):
+        ex=insert_data(database,ch,current_db)
+        if ex == True:
+            print()
+            tbl=ch.partition('to')[2].partition('(')[0].strip()
+            print(f'Success--> Added one row to table {tbl}!')
+            print()
+        else:
+            print()
+            print(f' Error--> {ex}')
+            print()
+

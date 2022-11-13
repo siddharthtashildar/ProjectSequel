@@ -130,6 +130,46 @@ def display_data(db,query,db_name):
         print(f"No Table named {tbl_name} present in {db_name}")   
         
 
-        
-            
+def drop_db(db,query):
+    db.reconnect()
+    db_name=query.split()[2]
+    if db_name in show_db(db):
+        dbcursor=db.cursor()
+        dbcursor.execute(f"drop database {db_name}")
+        db.commit()
+        return True
+    else:
+        return f'No database name {db_name} present!'
 
+            
+def drop_table(db,query,db_name):
+    db.reconnect()
+    dbname=use_db(db,db_name)
+    tbl_name=query.split()[2]
+    if dbname == db_name:
+        if tbl_name in show_tables(db,db_name):
+            dbcursor=db.cursor()
+            dbcursor.execute(f"drop table {tbl_name}")
+            db.commit()
+            return True
+        else:
+            return f'No table with name {tbl_name} present in {db_name}!'
+    else:
+        return 'No database seleted!'
+
+def insert_data(db,query,db_name):
+    db.reconnect()
+    dbname=use_db(db,db_name)
+    tbl_name=query.partition('to')[2].partition('(')[0].strip()
+    values=query.partition('to')[0].partition('data')[2].strip()
+    cols=query.partition(tbl_name)[2].strip()
+    if dbname == db_name:
+        if tbl_name in show_tables(db,db_name):
+            dbcursor=db.cursor()
+            dbcursor.execute(f"insert into {tbl_name}{cols} values{values}")
+            db.commit()
+            return True
+        else:
+            return f'No table with name {tbl_name} present in {db_name}!'
+    else:
+        return 'No database seleted!'

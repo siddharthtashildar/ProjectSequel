@@ -49,3 +49,19 @@ describe <table_name> --> specifiy <table_name>
 
 select * from <table_name> --> from <table_name> display <cols> with <field> == <some_data> 
 
+drop database <db_name> --> delete database <db_name>
+                            remove database <db_name>
+                            del database <db_name>
+                            rm database <db_name>
+                            del db <db_name>
+                            rm db <db_name>
+
+drop table <tbl_name> -->   delete table <tbl_name>
+                            remove table <tbl_name>
+                            del table <tbl_name>
+                            rm table <tbl_name>
+                            del tbl <tbl_name>
+                            rm tbl <tbl_name>
+
+insert into <tbl_name> values() --> add data () to <tbl_name> [(cols)]
+

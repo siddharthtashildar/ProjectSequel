@@ -31,3 +31,13 @@ def check_desc_table(ch,list):
     for i in list:
         if ch.lower().startswith(i):
             return True
+
+def check_drop_db(ch,list):
+    for i in list:
+        if ch.lower().startswith(i):
+            return True
+
+def check_drop_tbl(ch,list):
+    for i in list:
+        if ch.lower().startswith(i):
+            return True
