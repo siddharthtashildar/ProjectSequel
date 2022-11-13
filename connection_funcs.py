@@ -8,6 +8,7 @@ def connect_Manual():
     Host=input("Enter Host: ")
     User=input("Enter User: ")
     password = pwinput.pwinput(prompt='Enter Password: ')
+    Database=input('Enter Database(optional): ')
 
     #Host='localhost'
     #User='root'
@@ -20,7 +21,12 @@ def connect_Manual():
     # Database='bbvudwhkuqtqhqauukg6'
     db=''
     try:
-        db= mysql.connect(host=Host, user=User, password=password)
+        if len(Database)==0:
+            db= mysql.connect(host=Host, user=User, password=password)
+            return db,Database
+        else:
+            db= mysql.connect(host=Host, user=User, password=password,database=Database)
+            return db,Database
 
     except mysql.Error as err:
 
@@ -36,29 +42,44 @@ def connect_Manual():
     return db
 
 def connect_cmd():
+    print('Example: mysql -h YourHost -u YourUser -pYourPassword -P yourPort(optional) -D databaseName(optional)')
     text = input("Paste your command: ")
     cmd=text.split()
-    host=''
-    user=''
-    port=''
-    database=''
+    Host='localhost'
+    User=''
+    Port=3306
+    Database=''
     password=''
+    db=''
     for i in cmd:
         if i == '-h':
-            host=cmd[cmd.index(i)+1]
+            if cmd[cmd.index(i)+1] != Host :
+                Host=cmd[cmd.index(i)+1]
+            
         elif i == '-u':
-            user=cmd[cmd.index(i)+1]
+            User=cmd[cmd.index(i)+1]
+
         elif i == '-P':
-            port=cmd[cmd.index(i)+1]
+            if cmd[cmd.index(i)+1] != Port:
+                Port=cmd[cmd.index(i)+1]
+
         elif i == '-D':
-            database=cmd[cmd.index(i)+1]
+            Database=cmd[cmd.index(i)+1]
+
         elif i.startswith('-p') and len(i) > 2:
             password=i[2:]
+            
         elif i == '-p':
             password = pwinput.pwinput(prompt='Enter your Password: ')
-    
+
     try:
-        db= mysql.connect(host=host, user=user, password=password)
+        if len(Database)==0:
+            db= mysql.connect(host=Host, user=User, password=password , port=Port)
+            return db,Database
+
+        else:
+            db=mysql.connect(host=Host, user=User, password=password,database=Database,port=Port)
+            return db,Database
 
     except mysql.Error as err:
 
@@ -76,11 +97,16 @@ def connect_cmd():
 def connect_localhost():
     Host='localhost'
     User='root'
-    #password = pwinput.pwinput(prompt='Enter your Localhost Password: ')
-    password='blackpearl'
+    password = pwinput.pwinput(prompt='Enter your Localhost Password: ')
+    Database=input('Enter Database (Optional): ')
     db=''
     try:
-        db= mysql.connect(host=Host, user=User, password=password)
+        if len(Database)==0:
+            db= mysql.connect(host=Host, user=User, password=password)
+            return db,Database
+        else:
+            db=mysql.connect(host=Host, user=User, password=password,database=Database)
+            return db,Database
 
     except mysql.Error as err:
 

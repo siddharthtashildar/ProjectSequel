@@ -19,17 +19,17 @@ database=''
 current_db=''
 
 if connection_method == '1':
-    database=connect_Manual()
+    database,current_db=connect_Manual()
     print()
     loading_animation()
 
 elif connection_method == '2':
-    database=connect_cmd()
+    database,current_db=connect_cmd()
     print()
     loading_animation()
 
 elif connection_method == '3':
-    database=connect_localhost()
+    database,current_db=connect_localhost()
     print()
     loading_animation()
 
