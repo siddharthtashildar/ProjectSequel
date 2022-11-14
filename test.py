@@ -1,7 +1,5 @@
-query='add data (1002,"Elon",978866,989877665,"Boca Chica,Texas") to bank'
+query=r"modify pincode int(6) not null Primary key auto_increment after address in table bank"
 
-text=''
+print(query.partition('in table')[0].partition('modify')[2].partition('md')[2].strip())
 
-print(query.partition('to')[2].partition('(')[0])
 
-    

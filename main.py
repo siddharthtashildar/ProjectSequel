@@ -189,3 +189,54 @@ while ch not in quit  :
             print(f' Error--> {ex}')
             print()
 
+    elif ch.lower().startswith('convert'):
+        ex=convertcsv(database,ch,current_db)
+        if ex == True:
+            print()
+            tbl=ch.split()[1].partition('(')[0].strip()
+            file=ch.partition('to')[2].partition('with')[0].partition('order by')[0].replace('"','').replace("'",'').strip()
+            print(f'Success--> Converted {tbl} to {file}!')
+            print()
+        else:
+            print()
+            print(f' Error--> {ex}')
+            print()
+    
+    elif ch.lower().startswith('rename') or ch.lower().startswith('rn'):
+        ex=rename_table(database,ch,current_db)
+        if ex == True:
+            print()
+            old_name=ch.split()[1].strip()
+            new_name=ch.split()[3].strip()
+            print(f'Success--> Renamed table {old_name} to {new_name}!')
+            print()
+        else:
+            print()
+            print(f' Error--> {ex}')
+            print()
+    
+    elif ch.lower().startswith('add'):
+        ex=add_column(database,ch,current_db)
+        if ex == True:
+            print()
+            col_name=ch.split()[1].strip()
+            tbl_name=ch.split()[-1:][0].strip()
+            print(f'Success--> Added column {col_name} to {tbl_name}!')
+            print()
+        else:
+            print()
+            print(f' Error--> {ex}')
+            print()
+    
+    elif ch.lower().startswith('modify'):
+        ex=modify_column(database,ch,current_db)
+        if ex == True:
+            print()
+            col_name=ch.split()[1].strip()
+            tbl_name=ch.split()[-1:][0].strip()
+            print(f'Success--> Modified column {col_name} in {tbl_name}!')
+            print()
+        else:
+            print()
+            print(f' Error--> {ex}')
+            print()

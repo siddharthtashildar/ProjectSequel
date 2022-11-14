@@ -65,3 +65,18 @@ drop table <tbl_name> -->   delete table <tbl_name>
 
 insert into <tbl_name> values() --> add data () to <tbl_name> [(cols)]
 
+Csv convertor --> convert <tbl_name> to file.csv [with col = smt]
+
+Rename Table --> rename <tbl_name. to <new_name>
+
+Add column --> add <column_name> <definations> [after|first column] to <table>
+
+Modify column --> modify <column_name> <definations> [after|first column] in <table>  
+
+Rename column --> rename column <column_anme> to <new_name> <new definations> in table <table>
+                  rn column <column_anme> to <new_name> <new definations> in table <table>
+
+Delete column --> delete column <column_name> in <table>
+                  remove column <column_name> in <table>
+                  del column <column_name> in <table>
+                  rm column <column_name> in <table>
