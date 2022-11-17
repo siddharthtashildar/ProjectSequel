@@ -4,6 +4,13 @@ from queries import *
 from tabulate import tabulate
 
 
+
+#python -m venv venv
+
+#venv/Scripts/activate
+
+#python -m pip install -r requirements.txt
+
 print()
 print("Welcome To Project Sequel!")
 print()
