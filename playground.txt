@@ -1,4 +1,6 @@
 
+#mysql -u root -pblackpearl -D project
+
 
 create database <db_name> --> pls make database with name <db_name>
                               pls make db with name <db_name>
@@ -47,7 +49,7 @@ describe <table_name> --> specifiy <table_name>
                           rep <table_name>
                           desc <table_name>
 
-select * from <table_name> --> from <table_name> display <cols> with <field> == <some_data> 
+select * from <table_name> --> from <table_name> display <cols> when <field> == <some_data> 
 
 drop database <db_name> --> delete database <db_name>
                             remove database <db_name>
@@ -65,16 +67,15 @@ drop table <tbl_name> -->   delete table <tbl_name>
 
 insert into <tbl_name> values() --> add data () to <tbl_name> [(cols)]
 
-Csv convertor --> convert <tbl_name> to file.csv [with col = smt]
+Csv convertor --> convert <tbl_name> to file.csv [when col = smt]
 
-Rename Table --> rename <tbl_name. to <new_name>
+Rename Table --> rename table <tbl_name> to <new_name>
 
 Add column --> add <column_name> <definations> [after|first column] to <table>
 
-Modify column --> modify <column_name> <definations> [after|first column] in <table>  
+Modify column --> modify column <column_name> <definations> [after|first column] in table <table>  
 
 Rename column --> rename column <column_anme> to <new_name> <new definations> in table <table>
-                  rn column <column_anme> to <new_name> <new definations> in table <table>
 
 Delete column --> delete column <column_name> in <table>
                   remove column <column_name> in <table>

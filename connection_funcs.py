@@ -1,7 +1,6 @@
 
 import mysql.connector as mysql
 from mysql.connector import errorcode
-from urllib.parse import urlparse
 import pwinput
 
 def connect_Manual():
@@ -20,26 +19,40 @@ def connect_Manual():
     # password='KqhImxBuNUQFxIDekwVi'
     # Database='bbvudwhkuqtqhqauukg6'
     db=''
-    try:
-        if len(Database)==0:
+    if len(Database)==0:
+        try:
+            
             db= mysql.connect(host=Host, user=User, password=password)
             return db,Database
+
+        except mysql.Error as err:
+            print()
+            if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+                print("Something is wrong with your user name or password")
+            elif err.errno == errorcode.ER_BAD_DB_ERROR:
+                print("Database does not exist")
+            else:
+                print(err)
         else:
+            db.close()
+    else:       
+        try:
+            
             db= mysql.connect(host=Host, user=User, password=password,database=Database)
             return db,Database
 
-    except mysql.Error as err:
-
-        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-            print("Something is wrong with your user name or password")
-        elif err.errno == errorcode.ER_BAD_DB_ERROR:
-            print("Database does not exist")
+        except mysql.Error as err:
+            print()
+            if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+                print("Something is wrong with your user name or password")
+            elif err.errno == errorcode.ER_BAD_DB_ERROR:
+                print("Database does not exist")
+            else:
+                print(err)
         else:
-            print(err)
-    else:
-        db.close()
+            db.close()
 
-    return db
+    return db,''
 
 def connect_cmd():
     print('Example: mysql -h YourHost -u YourUser -pYourPassword -P yourPort(optional) -D databaseName(optional)')
@@ -72,27 +85,40 @@ def connect_cmd():
         elif i == '-p':
             password = pwinput.pwinput(prompt='Enter your Password: ')
 
-    try:
-        if len(Database)==0:
-            db= mysql.connect(host=Host, user=User, password=password , port=Port)
+    if len(Database)==0:
+        try:
+            
+            db= mysql.connect(host=Host, user=User, password=password)
             return db,Database
 
+        except mysql.Error as err:
+            print()
+            if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+                print("Something is wrong with your user name or password")
+            elif err.errno == errorcode.ER_BAD_DB_ERROR:
+                print("Database does not exist")
+            else:
+                print(err)
         else:
-            db=mysql.connect(host=Host, user=User, password=password,database=Database,port=Port)
+            db.close()
+    else:       
+        try:
+            
+            db= mysql.connect(host=Host, user=User, password=password,database=Database)
             return db,Database
 
-    except mysql.Error as err:
-
-        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-            print("Something is wrong with your user name or password")
-        elif err.errno == errorcode.ER_BAD_DB_ERROR:
-            print("Database does not exist")
+        except mysql.Error as err:
+            print()
+            if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+                print("Something is wrong with your user name or password")
+            elif err.errno == errorcode.ER_BAD_DB_ERROR:
+                print("Database does not exist")
+            else:
+                print(err)
         else:
-            print(err)
-    else:
-        db.close()
+            db.close()
 
-    return db
+    return db,''
 
 def connect_localhost():
     Host='localhost'
@@ -100,23 +126,38 @@ def connect_localhost():
     password = pwinput.pwinput(prompt='Enter your Localhost Password: ')
     Database=input('Enter Database (Optional): ')
     db=''
-    try:
-        if len(Database)==0:
+
+    if len(Database)==0:
+        try:
+            
             db= mysql.connect(host=Host, user=User, password=password)
             return db,Database
+
+        except mysql.Error as err:
+            print()
+            if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+                print("Something is wrong with your user name or password")
+            elif err.errno == errorcode.ER_BAD_DB_ERROR:
+                print("Database does not exist")
+            else:
+                print(err)
         else:
-            db=mysql.connect(host=Host, user=User, password=password,database=Database)
+            db.close()
+    else:       
+        try:
+            
+            db= mysql.connect(host=Host, user=User, password=password,database=Database)
             return db,Database
 
-    except mysql.Error as err:
-
-        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-            print("Something is wrong with your user name or password")
-        elif err.errno == errorcode.ER_BAD_DB_ERROR:
-            print("Database does not exist")
+        except mysql.Error as err:
+            print()
+            if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+                print("Something is wrong with your user name or password")
+            elif err.errno == errorcode.ER_BAD_DB_ERROR:
+                print("Database does not exist")
+            else:
+                print(err)
         else:
-            print(err)
-    else:
-        db.close()
+            db.close()
 
-    return db
+    return db,''

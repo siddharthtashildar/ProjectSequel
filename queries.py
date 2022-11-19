@@ -1,4 +1,4 @@
-import mysql.connector 
+import mysql.connector as mysql
 import csv 
 
 def create_db(db,user_query):
@@ -94,14 +94,14 @@ def display_data(db,query,db_name):
     tbl_name=query.split()[1].strip()
     dbname=use_db(db,db_name)
     user_query=query.lower().split()
-    column=query.partition('display')[2].partition('with')[0].strip()
-    clauses=query.partition('with')[2].strip()
+    column=query.partition('display')[2].partition('when')[0].strip()
+    clauses=query.partition('when')[2].strip()
     list=[]
     col=''
     num=0
     if tbl_name in show_tables(db,db_name):
         dbcursor=db.cursor()
-        if 'with' in user_query:
+        if 'when' in user_query:
             dbcursor.execute(f"select {column} from {tbl_name} where {clauses}")
             col=dbcursor.column_names
             table=dbcursor.fetchall()
@@ -178,15 +178,15 @@ def convertcsv(db,query,db_name):
     db.reconnect()
     dbname=use_db(db,db_name)
     tbl_name=query.split()[1].partition('(')[0].strip()
-    file_name=query.partition('to')[2].partition('with')[0].partition('order by')[0].replace('"','').replace("'",'').strip()
+    file_name=query.partition('to')[2].partition('when')[0].partition('order by')[0].replace('"','').replace("'",'').strip()
     cols=query.partition('to')[0].partition(tbl_name)[2].replace('(','').replace(')','').strip()
-    clauses=query.partition('with')[2].strip()
+    clauses=query.partition('when')[2].strip()
     if len(cols) == 0:
         cols='*'
     if dbname == db_name:
         if tbl_name in show_tables(db,db_name):
             dbcursor=db.cursor()
-            if 'with' in query.lower().split():
+            if 'when' in query.lower().split():
                 dbcursor.execute(f"select {cols} from {tbl_name} where {clauses}")
                 col=dbcursor.column_names
                 table=dbcursor.fetchall()
@@ -238,8 +238,8 @@ def convertcsv(db,query,db_name):
 def rename_table(db,query,db_name):
     db.reconnect()
     dbname=use_db(db,db_name)
-    old_name=query.split()[1].strip()
-    new_name=query.split()[3].strip()
+    old_name=query.split()[2].strip()
+    new_name=query.split()[4].strip()
     if dbname == db_name:
         if old_name in show_tables(db,db_name):
             dbcursor=db.cursor()
@@ -271,7 +271,7 @@ def add_column(db,query,db_name):
 def modify_column(db,query,db_name):
     db.reconnect()
     dbname=use_db(db,db_name)
-    col_name=query.partition('in table')[0].partition('modify')[2].strip()
+    col_name=query.partition('in table')[0].partition('modify column')[2].strip()
     tbl_name=query.split()[-1:][0].strip()
     if dbname == db_name:
         if tbl_name in show_tables(db,db_name):
@@ -279,6 +279,59 @@ def modify_column(db,query,db_name):
             dbcursor.execute(f"alter table {tbl_name} modify {col_name}")
             db.commit()
             return True
+        else:
+            return f'No table with name {tbl_name} present in {db_name}!'
+    else:
+        return 'No database seleted!'
+
+def delete_column(db,query,db_name):
+    db.reconnect()
+    dbname=use_db(db,db_name)
+    col_name=query.split()[2].strip()
+    tbl_name=query.split()[4].strip()
+    if dbname == db_name:
+        if tbl_name in show_tables(db,db_name):
+            dbcursor=db.cursor()
+            dbcursor.execute(f"alter table {tbl_name} drop column {col_name}")
+            db.commit()
+            return True
+        else:
+            return f'No table with name {tbl_name} present in {db_name}!'
+    else:
+        return 'No database seleted!'
+
+def rename_column(db,query,db_name):
+    db.reconnect()
+    dbname=use_db(db,db_name)
+    old_col_name=query.split()[2].strip()
+    new_col_name=query.partition('to')[2].partition('in table')[0].strip()
+    tbl_name=query.partition('in table')[2].strip()
+    if dbname == db_name:
+        if tbl_name in show_tables(db,db_name):
+            dbcursor=db.cursor()
+            dbcursor.execute(f"alter table {tbl_name} change column {old_col_name} {new_col_name}")
+            db.commit()
+            return True
+        else:
+            return f'No table with name {tbl_name} present in {db_name}!'
+    else:
+        return 'No database seleted!'
+
+def update_data(db,query,db_name):
+    db.reconnect()
+    dbname=use_db(db,db_name)
+    new_data=query.partition('set')[2].partition('when')[0].strip()
+    where_clause=query.partition('when')[2].strip()
+    tbl_name=query.split()[4].strip()
+
+    if dbname == db_name:
+        if tbl_name in show_tables(db,db_name):
+            dbcursor=db.cursor(buffered=True)
+            dbcursor.execute(f"select count(*) from {tbl_name} where {where_clause}")
+            row_count=dbcursor.rowcount
+            dbcursor.execute(f"update {tbl_name} set {new_data} where {where_clause}")
+            db.commit()
+            return True,row_count
         else:
             return f'No table with name {tbl_name} present in {db_name}!'
     else:

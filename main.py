@@ -2,7 +2,13 @@ from connection_funcs import *
 from misc_funcs import *
 from queries import *
 from tabulate import tabulate
+import mysql.connector as mysql
 
+
+database=''
+current_db=''
+quit=['q','Quit','quit','Q']
+ch=''
 
 print()
 print("Welcome To Project Sequel!")
@@ -15,87 +21,66 @@ print('3.Defualt LocalHost')
 connection_method=input("Enter your choice(1/2/3) or press q to quit: ")
 print()
 
-database=''
-current_db=''
 
 if connection_method == '1':
     database,current_db=connect_Manual()
     print()
-    loading_animation()
+    if database == '':
+        ch = 'quit'
+    elif database.is_connected():
+        ch = ''
+        loading_animation()
+        welcome_screen()
 
 elif connection_method == '2':
     database,current_db=connect_cmd()
     print()
-    loading_animation()
+    if database == '':
+        ch = 'quit'
+    elif database.is_connected():
+        ch = ''
+        loading_animation()
+        welcome_screen()
 
 elif connection_method == '3':
     database,current_db=connect_localhost()
     print()
-    loading_animation()
+    if database == '':
+        ch = 'quit'
+    elif database.is_connected():
+        ch = ''
+        loading_animation()
+        welcome_screen()
 
-
-
-print("Welcome to the Party!")
-print()
-print("Use 'help' or 'h' to list all commands available! ")
-print("Get Started- Use 'ld' to display all database present or use 'make db with name' to create new database!")
-print()
-
-#-------LIST TO CHECK QUERIES-------#
-quit=['q','Quit','quit','Q']
-
-create_db_list=[['make', 'database','with','name'],
-                ['make', 'db','with','name'],
-                ['mk', 'db','with','name'],
-                ['mk', 'database','with','name']]
-
-show_db_list=['list databases','ld','list db', 'show databases','list database','show db']
-
-use_db_list=[['switch','database'],
-             ['sw','database'],
-             ['sh','database'],
-             ['switch','db'],
-             ['sw','db'], 
-             ['sh','db']]
-
-show_table_list=['list tables','lt','list tbl', 'show tables','list table','show tbl']
-
-create_table_list=['make table with name',
-                   'mk table with name',
-                   'make tbl with name',
-                   'mk tbl with name']
-
-current_db_list=['curr database','current database','current db','curr db']
-
-desc_table_list=['specifiy' , 'detail', 'define' ,'represent' ,'describe', 'spec', 'dtl', 'def' ,'rep' ,'desc', 'df' ]
-
-drop_db_list=['delete database','remove database','del database','rm database','del db','rm db']
-
-drop_tbl_list=['delete table','remove table','del table','rm table','del tbl','rm tbl']
-
-ch=''
 
 while ch not in quit  :
 
     ch=input("Project_Sequel> ")
 
-    if ch.lower().split()[:-1] in create_db_list :
+    if check_create_db(ch) :
         ex=create_db(database,ch)
         if ex:
+            print()
             print(f"Success--> created Database named: {ch.split()[4]}!")
-    
-    elif ch.lower() in show_db_list:
+            print()
+
+    elif check_show_db(ch):
         print()
         print("The available Database are:")
         num=1
         db_list=show_db(database)
-        for i in db_list:
-            print(f'{db_list.index(i)+1}) {i}')
-            num += 1
-        print(f"Total Databases present: {num-1}")
-        print()
+        if db_list != '':
+            for i in db_list:
+                print(f'{db_list.index(i)+1}) {i}')
+                num += 1
+            print(f"Total Databases present: {num-1}")
+            print()
+        else:
+            print()
+            print(f"Total Databases present: {num-1}")
+            print()
         
-    elif ch.lower().split()[:-1] in use_db_list:
+    elif check_use_db(ch):
         current_db=use_db(database,ch.split()[2])
         if current_db == ch.split()[2]:
             print()
@@ -107,25 +92,35 @@ while ch not in quit  :
         else:
             print(current_db)
     
-    elif ch.lower() in show_table_list:
+    elif check_show_tables(ch):
         print()
-        print("The available tables are:")
-        num=1
-        table_list=show_tables(database,current_db)
-        for i in table_list:
-            print(f'{table_list.index(i)+1}) {i}')
-            num += 1
-        print(f"Total Tables present in {current_db}: {num-1}")
-        print()
+        if current_db != '':
+            print("The available tables are:")
+            num=1
+            table_list=show_tables(database,current_db)
+            for i in table_list:
+                print(f'{table_list.index(i)+1}) {i}')
+                num += 1
+            print(f"Total Tables present in {current_db}: {num-1}")
+            print()
+        else:
+            print("You have not selected any Database yet!")
+            print()
+            print("(use 'switch db' to switch database or use 'mk db with name' to create a new Database)")
+            print()
 
-    elif check_create_table(ch,create_table_list):
+    elif check_create_table(ch):
           ex=create_table(database,ch,current_db,ch.split()[4])
           if ex:
+            print()
             print(f"Success--> Created Table named {ch.split()[4]} in database {current_db}!")
+            print()
           else:
+            print()
             print(f' Error--> {ex}')
+            print()
         
-    elif ch.lower() in current_db_list:
+    elif check_current_db(ch):
         if current_db != '':
             print()
             print(f"You are Currently in: {current_db}")
@@ -138,7 +133,7 @@ while ch not in quit  :
             print("(use 'switch db' to switch database or use 'mk db with name' to create a new Database)")
             print()
 
-    elif check_desc_table(ch,desc_table_list):
+    elif check_desc_table(ch):
         print()
         data,cols,num=desc_table(database,ch,current_db)
         print(tabulate(data,headers=cols,tablefmt="github"))
@@ -146,7 +141,7 @@ while ch not in quit  :
         print(f"Total Columns present in {current_db}: {num}")
         print()
     
-    elif ch.lower().startswith('from'):
+    elif check_display_data(ch):
         
         print()
         data,cols,num=display_data(database,ch,current_db)
@@ -155,7 +150,7 @@ while ch not in quit  :
         print(f"Total Records present in {current_db}: {num}")
         print()
     
-    elif check_drop_db(ch,drop_db_list):
+    elif check_drop_db(ch):
         ex=drop_db(database,ch)
         if ex == True:
             print()
@@ -166,7 +161,7 @@ while ch not in quit  :
             print(f' Error--> {ex}')
             print()
 
-    elif check_drop_tbl(ch,drop_tbl_list):
+    elif check_drop_tbl(ch):
         ex=drop_table(database,ch,current_db)
         if ex == True:
             print()
@@ -177,7 +172,7 @@ while ch not in quit  :
             print(f' Error--> {ex}')
             print()
     
-    elif ch.lower().startswith('add data'):
+    elif check_insert_data(ch):
         ex=insert_data(database,ch,current_db)
         if ex == True:
             print()
@@ -189,12 +184,12 @@ while ch not in quit  :
             print(f' Error--> {ex}')
             print()
 
-    elif ch.lower().startswith('convert'):
+    elif check_convert_csv(ch):
         ex=convertcsv(database,ch,current_db)
         if ex == True:
             print()
             tbl=ch.split()[1].partition('(')[0].strip()
-            file=ch.partition('to')[2].partition('with')[0].partition('order by')[0].replace('"','').replace("'",'').strip()
+            file=ch.partition('to')[2].partition('when')[0].partition('order by')[0].replace('"','').replace("'",'').strip()
             print(f'Success--> Converted {tbl} to {file}!')
             print()
         else:
@@ -202,12 +197,13 @@ while ch not in quit  :
             print(f' Error--> {ex}')
             print()
     
-    elif ch.lower().startswith('rename') or ch.lower().startswith('rn'):
+    elif check_rename_table(ch):
         ex=rename_table(database,ch,current_db)
+        print('that was really not cool')
         if ex == True:
             print()
-            old_name=ch.split()[1].strip()
-            new_name=ch.split()[3].strip()
+            old_name=ch.split()[2].strip()
+            new_name=ch.split()[4].strip()
             print(f'Success--> Renamed table {old_name} to {new_name}!')
             print()
         else:
@@ -215,7 +211,7 @@ while ch not in quit  :
             print(f' Error--> {ex}')
             print()
     
-    elif ch.lower().startswith('add'):
+    elif check_add_column(ch):
         ex=add_column(database,ch,current_db)
         if ex == True:
             print()
@@ -228,7 +224,7 @@ while ch not in quit  :
             print(f' Error--> {ex}')
             print()
     
-    elif ch.lower().startswith('modify'):
+    elif check_modify_column(ch):
         ex=modify_column(database,ch,current_db)
         if ex == True:
             print()
@@ -240,3 +236,57 @@ while ch not in quit  :
             print()
             print(f' Error--> {ex}')
             print()
+
+    elif check_delete_column(ch):
+        ex=delete_column(database,ch,current_db)
+        if ex == True:
+            print()
+            col_name=ch.split()[2].strip()
+            tbl_name=ch.split()[4].strip()
+            print(f'Success--> Deleted column {col_name} in {tbl_name}!')
+            print()
+        else:
+            print()
+            print(f' Error--> {ex}')
+            print()
+    
+    elif check_rename_column(ch):
+        ex=rename_column(database,ch,current_db)
+        if ex == True:
+            print()
+            old_col_name=ch.split()[2].strip()
+            new_col_name=ch.partition('to')[2].partition('in table')[0].strip()
+            tbl_name=ch.partition('in table')[2].strip()
+            print(f'Success--> Renamed column from {old_col_name} to {new_col_name} in {tbl_name}!')
+            print()
+        else:
+            print()
+            print(f' Error--> {ex}')
+            print()
+    
+    elif check_modify_data(ch):
+        ex,rows=update_data(database,ch,current_db)
+        if ex == True:
+            print()
+            tbl_name=ch.split()[4].strip()
+            print(f'Success--> Modified {rows} rows in {tbl_name}!')
+            print()
+        else:
+            print()
+            print(f' Error--> {ex}')
+            print()
+
+    elif ch == '':
+        pass
+
+    elif ch in quit:
+        print()
+        print('GoodBye!')   
+        print('See you again!') 
+        Exit_animation()
+    else:
+        print()
+        print('Invalid Input!')
+        print()
+        print('use "run mysql <your Query> to run mysql query directly(Note: Only runs query and doesnt return anything, so use i=only for modification.)"')
+        print()
