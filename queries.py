@@ -1,3 +1,6 @@
+
+#------IMPORT MODULES------#
+
 import mysql.connector as mysql
 import csv 
 
@@ -8,7 +11,6 @@ def create_db(db,user_query):
     for i in user_query:
         if i.lower() == 'name':
             db_name = user_query[user_query.index(i) + 1 ]
-
 
     query=f"create database {db_name}"
 
@@ -37,6 +39,7 @@ def use_db(db,db_name):
         dbcursor.execute(f"use {db_name}")
         db.commit()
         return db_name
+
     else:
         return f"Database named {db_name} doesnt exist!"
 

@@ -1,9 +1,14 @@
+
+#------IMPORT MODULES------#
+
 import time
 import sys
 import os
 
+#Function for loading screen while connecting to the Database
+
 def loading_animation():
-# String to be displayed when the application is loading
+    #String to be displayed when the application is loading
     load_str = "Connection to the server..."
   
     animation = "|/-\\|/-\\|/-\\|/-\\|/-\\"
@@ -21,6 +26,7 @@ def loading_animation():
     else:
         os.system("clear")
 
+#Function for loading screen while Exiting the program
 def Exit_animation():
 # String to be displayed when the application is loading
     load_str = "Exiting..."
@@ -32,6 +38,7 @@ def Exit_animation():
         sys.stdout.write("\r"+ load_str+ animation[i])
         sys.stdout.flush()
 
+#Welcome Screen After Connecting to The Database
 def welcome_screen():
     print("Welcome to the Party!")
     print()

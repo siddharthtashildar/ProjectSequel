@@ -1,14 +1,22 @@
+
+#------IMPORTING MODULES------#
+
+#User Defined
 from connection_funcs import *
 from misc_funcs import *
 from queries import *
+#Libraries
 from tabulate import tabulate
-import mysql.connector as mysql
 
+
+#------GLOBAL VARIABLES------#
 
 database=''
 current_db=''
 quit=['q','Quit','quit','Q']
 ch=''
+
+#------CONNECTION SCREEN------#
 
 print()
 print("Welcome To Project Sequel!")
@@ -21,6 +29,7 @@ print('3.Defualt LocalHost')
 connection_method=input("Enter your choice(1/2/3) or press q to quit: ")
 print()
 
+#---Checking Connection Methods---#
 
 if connection_method == '1':
     database,current_db=connect_Manual()
@@ -51,6 +60,9 @@ elif connection_method == '3':
         ch = ''
         loading_animation()
         welcome_screen()
+
+
+#------MAIN WHILE LOOP------#
 
 
 while ch not in quit  :
@@ -136,18 +148,20 @@ while ch not in quit  :
     elif check_desc_table(ch):
         print()
         data,cols,num=desc_table(database,ch,current_db)
+        tbl_name=ch.split()[1].strip()
         print(tabulate(data,headers=cols,tablefmt="github"))
         print()
-        print(f"Total Columns present in {current_db}: {num}")
+        print(f"Total Columns present in {tbl_name}: {num}")
         print()
     
     elif check_display_data(ch):
         
         print()
         data,cols,num=display_data(database,ch,current_db)
+        tbl_name=ch.split()[1].strip()
         print(tabulate(data,headers=cols,tablefmt="github"))
         print()
-        print(f"Total Records present in {current_db}: {num}")
+        print(f"Total Records present in {tbl_name}: {num}")
         print()
     
     elif check_drop_db(ch):
@@ -280,13 +294,12 @@ while ch not in quit  :
         pass
 
     elif ch in quit:
-        print()
-        print('GoodBye!')   
-        print('See you again!') 
+        print()   
         Exit_animation()
+
     else:
         print()
         print('Invalid Input!')
         print()
-        print('use "run mysql <your Query> to run mysql query directly(Note: Only runs query and doesnt return anything, so use i=only for modification.)"')
+        print('use "run mysql <your Query> to run mysql query directly (Note: Only runs query and doesnt return anything, so use i=only for modification.)"')
         print()

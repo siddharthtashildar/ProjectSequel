@@ -1,8 +1,12 @@
 
+
+#------IMPORT MODULES------#
+
 import mysql.connector as mysql
 from mysql.connector import errorcode
 import pwinput
 
+#Function for Connecting Manually
 def connect_Manual():
     Host=input("Enter Host: ")
     User=input("Enter User: ")
@@ -54,6 +58,7 @@ def connect_Manual():
 
     return db,''
 
+#Function for connecting Using Mysql CommandLine Command
 def connect_cmd():
     print('Example: mysql -h YourHost -u YourUser -pYourPassword -P yourPort(optional) -D databaseName(optional)')
     text = input("Paste your command: ")
@@ -120,6 +125,7 @@ def connect_cmd():
 
     return db,''
 
+#Function for connecting to LocalHost
 def connect_localhost():
     Host='localhost'
     User='root'
