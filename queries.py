@@ -1,7 +1,7 @@
 
 #------IMPORT MODULES------#
 
-import mysql.connector as mysql
+import mysql.connector 
 import csv 
 
 def create_db(db,user_query):
@@ -11,90 +11,141 @@ def create_db(db,user_query):
     for i in user_query:
         if i.lower() == 'name':
             db_name = user_query[user_query.index(i) + 1 ]
+    try:
+        query=f"create database {db_name}"
+        dbcursor = db.cursor()
+        dbcursor.execute(query)
+        db.commit()
+        dbcursor.close()
+        return True,None
 
-    query=f"create database {db_name}"
+    except mysql.connector.Error as err:
+        return False,err
 
-    dbcursor = db.cursor()
-    dbcursor.execute(query)
-    db.commit()
-    return True
-
-def show_db(db):
+def show_db(db,index=False):
     db.reconnect()
-    dbcursor=db.cursor()
-    dbcursor.execute("Show databases")
-    table=dbcursor.fetchall()
+    try:
+        dbcursor=db.cursor()
+        dbcursor.execute("Show databases")
+        table=dbcursor.fetchall()
+        dbcursor.close()
+
+    except mysql.connector.Error as err:
+        print()
+        print(f' Error--> {err}')
+        print()
     list=[]
-
-    for i in table:
-        for j in i:
-            list.append(j)
-
+    if index == False:
+        for i in table:
+            for j in i:
+                list.append(j)
+    else:
+        for i in table:
+            for j in i:
+                list.append([table.index(i)+1,j])
     return list
 
 def use_db(db,db_name):
     db.reconnect()
     if db_name in show_db(db):
-        dbcursor=db.cursor()
-        dbcursor.execute(f"use {db_name}")
-        db.commit()
-        return db_name
-
+        try:
+            dbcursor=db.cursor()
+            dbcursor.execute(f"use {db_name}")
+            db.commit()
+            dbcursor.close()
+            return db_name
+        except mysql.connector.Error as err:
+            return err
     else:
         return f"Database named {db_name} doesnt exist!"
 
-def show_tables(db,db_name):
+
+def show_tables(db,db_name,index=False):
     db.reconnect()
     dbname=use_db(db,db_name)
     if dbname == db_name:
-        dbcursor=db.cursor()
-        dbcursor.execute("Show tables")
-        table=dbcursor.fetchall()
+        try:
+            dbcursor=db.cursor()
+            dbcursor.execute("Show tables")
+            table=dbcursor.fetchall()
+            dbcursor.close()
+
+        except mysql.connector.Error as err:
+            print()
+            print(f' Error--> {err}')
+            print()
+
         list=[]
-        for i in table:
-            for j in i:
-                list.append(j)
+        if index == False:
+            for i in table:
+                for j in i:
+                    list.append(j)
+        else:
+            for i in table:
+                for j in i:
+                    list.append([table.index(i)+1,j])
         return list
     else:
         print(dbname)
+
 
 def create_table(db,query,db_name,table_name):
     user_query=query.partition(table_name)
     db.reconnect()
     dbname=use_db(db,db_name)
     if dbname == db_name:
-        dbcursor=db.cursor()
-        dbcursor.execute(f"create table {table_name} {user_query[2].strip()}")
-        db.commit()
-        return True
+        try:
+            dbcursor=db.cursor()
+            dbcursor.execute(f"create table {table_name} {user_query[2].strip()}")
+            db.commit()
+            return True,None
+
+        except mysql.connector.Error as err:
+            return False,err
     else:
         return dbname
 
+
 def desc_table(db,query,db_name):
     db.reconnect()
-    tbl_name=query.split()[1].strip()
+    tbl_name=''
+    if '-i' in query.lower().split():
+        tbl_name=show_tables(db,db_name)[int(query.split()[2])-1]
+    else:
+        tbl_name=query.split()[1]
     dbname=use_db(db,db_name)
     num=0
     dlist=[]
     if tbl_name in show_tables(db,db_name):
-        dbcursor=db.cursor()
-        dbcursor.execute(f'desc {tbl_name}')
-        col=dbcursor.column_names
-        data=dbcursor.fetchall()
-        for i in data:
-            rec=list(i)
-            rec[1]=rec[1].decode()
-            dlist.append(rec)
-            num += 1
-        return dlist,col,num
+        try:
+            dbcursor=db.cursor()
+            dbcursor.execute(f'desc {tbl_name}')
+            col=dbcursor.column_names
+            data=dbcursor.fetchall()
+            for i in data:
+                rec=list(i)
+                rec[1]=rec[1].decode()
+                dlist.append(rec)
+                num += 1
+            return dlist,col,num,tbl_name
 
+        except mysql.connector.Error as err:
+            print()
+            print(f' Error--> {err}')
+            print()
+            return 
 
     else:
         print(f'No table named {tbl_name} prensent in {db_name}')
 
 def display_data(db,query,db_name):
     db.reconnect()
-    tbl_name=query.split()[1].strip()
+    tbl_name=''
+    if '-i' in query.lower().split():
+        tbl_name=show_tables(db,db_name)[int(query.split()[2])-1]
+    else:
+        tbl_name=query.split()[1].strip()
+    
     dbname=use_db(db,db_name)
     user_query=query.lower().split()
     column=query.partition('display')[2].partition('when')[0].strip()
@@ -103,32 +154,30 @@ def display_data(db,query,db_name):
     col=''
     num=0
     if tbl_name in show_tables(db,db_name):
-        dbcursor=db.cursor()
-        if 'when' in user_query:
-            dbcursor.execute(f"select {column} from {tbl_name} where {clauses}")
-            col=dbcursor.column_names
-            table=dbcursor.fetchall()
+        try:
+            dbcursor=db.cursor()
+            if 'when' in user_query:
+                dbcursor.execute(f"select {column} from {tbl_name} where {clauses}")
+                col=dbcursor.column_names
+                table=dbcursor.fetchall()
+            else:
+                if 'order by' in query.lower():
+                    dbcursor.execute(f"select {column} from {tbl_name} order by {query.partition('order by')[2].strip()}")
+                    col=dbcursor.column_names
+                    table=dbcursor.fetchall()
+                else:
+                    dbcursor.execute(f"select {column} from {tbl_name}")
+                    col=dbcursor.column_names
+                    table=dbcursor.fetchall()
             for i in table:
                 list.append(i)
                 num += 1
-            return list,col,num
-        else:
-            if 'order by' in query.lower():
-                dbcursor.execute(f"select {column} from {tbl_name} order by {query.partition('order by')[2].strip()}")
-                col=dbcursor.column_names
-                table=dbcursor.fetchall()
-                for i in table:
-                    list.append(i)
-                    num += 1
-                return list,col,num
-            else:
-                dbcursor.execute(f"select {column} from {tbl_name}")
-                col=dbcursor.column_names
-                table=dbcursor.fetchall()
-                for i in table:
-                    list.append(i)
-                    num += 1
-                return list,col,num
+            return list,col,num,tbl_name
+        except mysql.connector.Error as err:
+            print()
+            print(f' Error--> {err}')
+            print()
+            return 
     else:
         print(f"No Table named {tbl_name} present in {db_name}")   
         
@@ -137,10 +186,13 @@ def drop_db(db,query):
     db.reconnect()
     db_name=query.split()[2].strip()
     if db_name in show_db(db):
-        dbcursor=db.cursor()
-        dbcursor.execute(f"drop database {db_name}")
-        db.commit()
-        return True
+        try:
+            dbcursor=db.cursor()
+            dbcursor.execute(f"drop database {db_name}")
+            db.commit()
+            return True,None
+        except mysql.connector.Error as err:
+            return False,err
     else:
         return f'No database name {db_name} present!'
 
@@ -151,10 +203,13 @@ def drop_table(db,query,db_name):
     tbl_name=query.split()[2].strip()
     if dbname == db_name:
         if tbl_name in show_tables(db,db_name):
-            dbcursor=db.cursor()
-            dbcursor.execute(f"drop table {tbl_name}")
-            db.commit()
-            return True
+            try:
+                dbcursor=db.cursor()
+                dbcursor.execute(f"drop table {tbl_name}")
+                db.commit()
+                return True,None
+            except mysql.connector.Error as err:
+                return False,err
         else:
             return f'No table with name {tbl_name} present in {db_name}!'
     else:
@@ -168,10 +223,13 @@ def insert_data(db,query,db_name):
     cols=query.partition(tbl_name)[2].strip()
     if dbname == db_name:
         if tbl_name in show_tables(db,db_name):
-            dbcursor=db.cursor()
-            dbcursor.execute(f"insert into {tbl_name}{cols} values{values}")
-            db.commit()
-            return True
+            try:
+                dbcursor=db.cursor()
+                dbcursor.execute(f"insert into {tbl_name}{cols} values{values}")
+                db.commit()
+                return True,None
+            except mysql.connector.Error as err:
+                return False,err
         else:
             return f'No table with name {tbl_name} present in {db_name}!'
     else:
@@ -189,50 +247,33 @@ def convertcsv(db,query,db_name):
     if dbname == db_name:
         if tbl_name in show_tables(db,db_name):
             dbcursor=db.cursor()
-            if 'when' in query.lower().split():
-                dbcursor.execute(f"select {cols} from {tbl_name} where {clauses}")
-                col=dbcursor.column_names
-                table=dbcursor.fetchall()
-                try:
-                    filehandle=open(file_name,'w')
-                    writer=csv.writer(filehandle)
-                    writer.writerow(col)
-                    for y in table:
-                        writer.writerow(y)
-                    filehandle.close()
-                    return True
-                except:
-                    return 'Something went wrong!'
-            else:
-                if 'order by' in query.lower():
-                    dbcursor.execute(f"SELECT {cols} FROM {tbl_name} ORDER BY {query.partition('order by')[2].strip()}")
+            try:
+                if 'when' in query.lower().split():
+                    dbcursor.execute(f"select {cols} from {tbl_name} where {clauses}")
                     col=dbcursor.column_names
                     table=dbcursor.fetchall()
-                    try:
-                        filehandle=open(file_name,'w')
-                        writer=csv.writer(filehandle)
-                        writer.writerow(col)
-                        for y in table:
-                            writer.writerow(y)
-                        filehandle.close()
-                        return True
-                    except:
-                        return 'Something went wrong!'
-
                 else:
-                    dbcursor.execute(f"select {cols} from {tbl_name}")
-                    col=dbcursor.column_names
-                    table=dbcursor.fetchall()
-                    try:
-                        filehandle=open(file_name,'w')
-                        writer=csv.writer(filehandle)
-                        writer.writerow(col)
-                        for y in table:
-                            writer.writerow(y)
-                        filehandle.close()
-                        return True
-                    except:
-                        return 'Something went wrong!'
+                    if 'order by' in query.lower():
+                        dbcursor.execute(f"SELECT {cols} FROM {tbl_name} ORDER BY {query.partition('order by')[2].strip()}")
+                        col=dbcursor.column_names
+                        table=dbcursor.fetchall()
+                    else:
+                        dbcursor.execute(f"select {cols} from {tbl_name}")
+                        col=dbcursor.column_names
+                        table=dbcursor.fetchall()
+            except mysql.connector.Error as err:
+                return False,err
+            
+            try:
+                filehandle=open(file_name,'w')
+                writer=csv.writer(filehandle)
+                writer.writerow(col)
+                for y in table:
+                    writer.writerow(y)
+                filehandle.close()
+                return True,None
+            except:
+                return 'Something went wrong!'
         else:
             return f'No table with name {tbl_name} present in {db_name}!'
     else:
@@ -245,10 +286,13 @@ def rename_table(db,query,db_name):
     new_name=query.split()[4].strip()
     if dbname == db_name:
         if old_name in show_tables(db,db_name):
-            dbcursor=db.cursor()
-            dbcursor.execute(f"alter table {old_name} rename to {new_name}")
-            db.commit()
-            return True
+            try:
+                dbcursor=db.cursor()
+                dbcursor.execute(f"alter table {old_name} rename to {new_name}")
+                db.commit()
+                return True,None
+            except mysql.connector.Error as err:
+                return False,err
         else:
             return f'No table with name {old_name} present in {db_name}!'
     else:
@@ -262,10 +306,13 @@ def add_column(db,query,db_name):
     definations=query.partition(col_name)[2].partition(f'to table')[0].strip()
     if dbname == db_name:
         if tbl_name in show_tables(db,db_name):
-            dbcursor=db.cursor()
-            dbcursor.execute(f"alter table {tbl_name} add {col_name} {definations}")
-            db.commit()
-            return True
+            try:
+                dbcursor=db.cursor()
+                dbcursor.execute(f"alter table {tbl_name} add {col_name} {definations}")
+                db.commit()
+                return True,None
+            except mysql.connector.Error as err:
+                return False,err
         else:
             return f'No table with name {tbl_name} present in {db_name}!'
     else:
@@ -278,10 +325,13 @@ def modify_column(db,query,db_name):
     tbl_name=query.split()[-1:][0].strip()
     if dbname == db_name:
         if tbl_name in show_tables(db,db_name):
-            dbcursor=db.cursor()
-            dbcursor.execute(f"alter table {tbl_name} modify {col_name}")
-            db.commit()
-            return True
+            try:
+                dbcursor=db.cursor()
+                dbcursor.execute(f"alter table {tbl_name} modify {col_name}")
+                db.commit()
+                return True,None
+            except mysql.connector.Error as err:
+                return False,err
         else:
             return f'No table with name {tbl_name} present in {db_name}!'
     else:
@@ -294,10 +344,13 @@ def delete_column(db,query,db_name):
     tbl_name=query.split()[4].strip()
     if dbname == db_name:
         if tbl_name in show_tables(db,db_name):
-            dbcursor=db.cursor()
-            dbcursor.execute(f"alter table {tbl_name} drop column {col_name}")
-            db.commit()
-            return True
+            try:
+                dbcursor=db.cursor()
+                dbcursor.execute(f"alter table {tbl_name} drop column {col_name}")
+                db.commit()
+                return True,None
+            except mysql.connector.Error as err:
+                return False,err
         else:
             return f'No table with name {tbl_name} present in {db_name}!'
     else:
@@ -311,10 +364,13 @@ def rename_column(db,query,db_name):
     tbl_name=query.partition('in table')[2].strip()
     if dbname == db_name:
         if tbl_name in show_tables(db,db_name):
-            dbcursor=db.cursor()
-            dbcursor.execute(f"alter table {tbl_name} change column {old_col_name} {new_col_name}")
-            db.commit()
-            return True
+            try:
+                dbcursor=db.cursor()
+                dbcursor.execute(f"alter table {tbl_name} change column {old_col_name} {new_col_name}")
+                db.commit()
+                return True,None
+            except mysql.connector.Error as err:
+                return False,err
         else:
             return f'No table with name {tbl_name} present in {db_name}!'
     else:
@@ -329,12 +385,15 @@ def update_data(db,query,db_name):
 
     if dbname == db_name:
         if tbl_name in show_tables(db,db_name):
-            dbcursor=db.cursor(buffered=True)
-            dbcursor.execute(f"select count(*) from {tbl_name} where {where_clause}")
-            row_count=dbcursor.rowcount
-            dbcursor.execute(f"update {tbl_name} set {new_data} where {where_clause}")
-            db.commit()
-            return True,row_count
+            try:
+                dbcursor=db.cursor(buffered=True)
+                dbcursor.execute(f"select count(*) from {tbl_name} where {where_clause}")
+                row_count=dbcursor.rowcount
+                dbcursor.execute(f"update {tbl_name} set {new_data} where {where_clause}")
+                db.commit()
+                return True,row_count,None
+            except mysql.connector.Error as err:
+                return False,None,err
         else:
             return f'No table with name {tbl_name} present in {db_name}!'
     else:

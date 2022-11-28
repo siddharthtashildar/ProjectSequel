@@ -70,50 +70,62 @@ while ch not in quit  :
     ch=input("Project_Sequel> ")
 
     if check_create_db(ch) :
-        ex=create_db(database,ch)
+        ex,err=create_db(database,ch)
         if ex:
             print()
             print(f"Success--> created Database named: {ch.split()[4]}!")
             print()
+        else:
+            print()
+            print(f' Error--> {err}')
+            print()
 
     elif check_show_db(ch):
-        print()
-        print("The available Database are:")
+        print()  
         num=1
-        db_list=show_db(database)
+        db_list=show_db(database,index=True)
         if db_list != '':
-            for i in db_list:
-                print(f'{db_list.index(i)+1}) {i}')
-                num += 1
-            print(f"Total Databases present: {num-1}")
+            print("The available Database are:")
+            print()
+            print(tabulate(db_list, headers=['no','Name'],tablefmt="simple"))
+            print()
+            print(f"Total Databases present: {len(db_list)}")
             print()
         else:
             print()
-            print(f"Total Databases present: {num-1}")
+            print(f"Total Databases present: {len(db_list)}")
             print()
         
     elif check_use_db(ch):
-        current_db=use_db(database,ch.split()[2])
-        if current_db == ch.split()[2]:
+        db_name=''
+        if '-i' in ch.lower().split():
+            db_name=show_db(database)[int(ch.split()[3])-1]
+        else:
+            db_name=ch.split()[2]
+
+        current_db=use_db(database,db_name)
+
+        if current_db == db_name:
             print()
-            print(f"Switched to database --> {ch.split()[2]}")
+            print(f"Switched to database --> {current_db}")
             print()
             print("(use 'switch db' to switch database or use 'lt' to display all tables.')")
             print()
 
         else:
-            print(current_db)
-    
+            print()
+            print(f' Error--> {current_db}')
+            print()
+
     elif check_show_tables(ch):
         print()
         if current_db != '':
             print("The available tables are:")
-            num=1
-            table_list=show_tables(database,current_db)
-            for i in table_list:
-                print(f'{table_list.index(i)+1}) {i}')
-                num += 1
-            print(f"Total Tables present in {current_db}: {num-1}")
+            print()
+            table_list=show_tables(database,current_db,index=True)
+            print(tabulate(table_list, headers=['no','Name'],tablefmt="simple"))
+            print()
+            print(f"Total Tables present in {current_db}: {len(table_list)}")
             print()
         else:
             print("You have not selected any Database yet!")
@@ -122,14 +134,14 @@ while ch not in quit  :
             print()
 
     elif check_create_table(ch):
-          ex=create_table(database,ch,current_db,ch.split()[4])
-          if ex:
+          ex,err=create_table(database,ch,current_db,ch.split()[4])
+          if ex == True:
             print()
             print(f"Success--> Created Table named {ch.split()[4]} in database {current_db}!")
             print()
           else:
             print()
-            print(f' Error--> {ex}')
+            print(f' Error--> {err}')
             print()
         
     elif check_current_db(ch):
@@ -147,47 +159,44 @@ while ch not in quit  :
 
     elif check_desc_table(ch):
         print()
-        data,cols,num=desc_table(database,ch,current_db)
-        tbl_name=ch.split()[1].strip()
+        data,cols,num,tbl_name=desc_table(database,ch,current_db)
         print(tabulate(data,headers=cols,tablefmt="github"))
         print()
         print(f"Total Columns present in {tbl_name}: {num}")
         print()
     
     elif check_display_data(ch):
-        
         print()
-        data,cols,num=display_data(database,ch,current_db)
-        tbl_name=ch.split()[1].strip()
+        data,cols,num,tbl_name=display_data(database,ch,current_db)
         print(tabulate(data,headers=cols,tablefmt="github"))
         print()
         print(f"Total Records present in {tbl_name}: {num}")
         print()
     
     elif check_drop_db(ch):
-        ex=drop_db(database,ch)
+        ex,err=drop_db(database,ch)
         if ex == True:
             print()
             print(f'Success--> deleted database with name {ch.split()[2]}')
             print()
         else:
             print()
-            print(f' Error--> {ex}')
+            print(f' Error--> {err}')
             print()
 
     elif check_drop_tbl(ch):
-        ex=drop_table(database,ch,current_db)
+        ex,err=drop_table(database,ch,current_db)
         if ex == True:
             print()
             print(f'Success--> deleted table with name {ch.split()[2]} from {current_db}!')
             print()
         else:
             print()
-            print(f' Error--> {ex}')
+            print(f' Error--> {err}')
             print()
     
     elif check_insert_data(ch):
-        ex=insert_data(database,ch,current_db)
+        ex,err=insert_data(database,ch,current_db)
         if ex == True:
             print()
             tbl=ch.partition('to')[2].partition('(')[0].strip()
@@ -195,11 +204,11 @@ while ch not in quit  :
             print()
         else:
             print()
-            print(f' Error--> {ex}')
+            print(f' Error--> {err}')
             print()
 
     elif check_convert_csv(ch):
-        ex=convertcsv(database,ch,current_db)
+        ex,err=convertcsv(database,ch,current_db)
         if ex == True:
             print()
             tbl=ch.split()[1].partition('(')[0].strip()
@@ -208,11 +217,11 @@ while ch not in quit  :
             print()
         else:
             print()
-            print(f' Error--> {ex}')
+            print(f' Error--> {err}')
             print()
     
     elif check_rename_table(ch):
-        ex=rename_table(database,ch,current_db)
+        ex,err=rename_table(database,ch,current_db)
         print('that was really not cool')
         if ex == True:
             print()
@@ -222,11 +231,11 @@ while ch not in quit  :
             print()
         else:
             print()
-            print(f' Error--> {ex}')
+            print(f' Error--> {err}')
             print()
     
     elif check_add_column(ch):
-        ex=add_column(database,ch,current_db)
+        ex.err=add_column(database,ch,current_db)
         if ex == True:
             print()
             col_name=ch.split()[1].strip()
@@ -235,11 +244,11 @@ while ch not in quit  :
             print()
         else:
             print()
-            print(f' Error--> {ex}')
+            print(f' Error--> {err}')
             print()
     
     elif check_modify_column(ch):
-        ex=modify_column(database,ch,current_db)
+        ex,err=modify_column(database,ch,current_db)
         if ex == True:
             print()
             col_name=ch.split()[1].strip()
@@ -248,11 +257,11 @@ while ch not in quit  :
             print()
         else:
             print()
-            print(f' Error--> {ex}')
+            print(f' Error--> {err}')
             print()
 
     elif check_delete_column(ch):
-        ex=delete_column(database,ch,current_db)
+        ex,err=delete_column(database,ch,current_db)
         if ex == True:
             print()
             col_name=ch.split()[2].strip()
@@ -261,11 +270,11 @@ while ch not in quit  :
             print()
         else:
             print()
-            print(f' Error--> {ex}')
+            print(f' Error--> {err}')
             print()
     
     elif check_rename_column(ch):
-        ex=rename_column(database,ch,current_db)
+        ex,err=rename_column(database,ch,current_db)
         if ex == True:
             print()
             old_col_name=ch.split()[2].strip()
@@ -275,11 +284,11 @@ while ch not in quit  :
             print()
         else:
             print()
-            print(f' Error--> {ex}')
+            print(f' Error--> {err}')
             print()
     
     elif check_modify_data(ch):
-        ex,rows=update_data(database,ch,current_db)
+        ex,rows,err=update_data(database,ch,current_db)
         if ex == True:
             print()
             tbl_name=ch.split()[4].strip()
@@ -287,7 +296,7 @@ while ch not in quit  :
             print()
         else:
             print()
-            print(f' Error--> {ex}')
+            print(f' Error--> {err}')
             print()
 
     elif ch == '':

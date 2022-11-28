@@ -60,14 +60,15 @@ def check_show_db(ch):
         return True
 
 def check_use_db(ch):
-    use_db_list=[['switch','database'],
-             ['sw','database'],
-             ['sh','database'],
-             ['switch','db'],
-             ['sw','db'], 
-             ['sh','db']]
-    if ch.lower().split()[:-1] in use_db_list:
-        return True
+    use_db_list=['switch database',
+             'sw database',
+             'sh database',
+             'switch db',
+             'sw db', 
+             'sh db']
+    for i in use_db_list:
+        if ch.lower().startswith(i):
+            return True
 
 def check_show_tables(ch):
     show_table_list=['list tables','lt','list tbl', 'show tables','list table','show tbl']
