@@ -110,7 +110,10 @@ def desc_table(db,query,db_name):
     db.reconnect()
     tbl_name=''
     if '-i' in query.lower().split():
-        tbl_name=show_tables(db,db_name)[int(query.split()[2])-1]
+        try:
+            tbl_name=show_tables(db,db_name)[int(query.split()[2])-1]
+        except IndexError:
+            pass
     else:
         tbl_name=query.split()[1]
     dbname=use_db(db,db_name)
@@ -133,16 +136,20 @@ def desc_table(db,query,db_name):
             print()
             print(f' Error--> {err}')
             print()
-            return 
+            return None,None,None,None
 
     else:
         print(f'No table named {tbl_name} prensent in {db_name}')
+        return None,None,None,None
 
 def display_data(db,query,db_name):
     db.reconnect()
     tbl_name=''
     if '-i' in query.lower().split():
-        tbl_name=show_tables(db,db_name)[int(query.split()[2])-1]
+        try:
+            tbl_name=show_tables(db,db_name)[int(query.split()[2])-1]
+        except IndexError:
+            pass
     else:
         tbl_name=query.split()[1].strip()
     
@@ -265,7 +272,7 @@ def convertcsv(db,query,db_name):
                 return False,err
             
             try:
-                filehandle=open(file_name,'w')
+                filehandle=open(file_name,'w',newline='')
                 writer=csv.writer(filehandle)
                 writer.writerow(col)
                 for y in table:

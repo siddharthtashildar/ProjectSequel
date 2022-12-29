@@ -19,7 +19,7 @@ ch=''
 #------CONNECTION SCREEN------#
 
 print()
-print("Welcome To Project Sequel!")
+print("Welcome To Emerald!")
 print()
 print()
 print('How do you want to Login?')
@@ -67,7 +67,7 @@ elif connection_method == '3':
 
 while ch not in quit  :
 
-    ch=input("Project_Sequel> ")
+    ch=input("EmeraldSQL> ")
 
     if check_create_db(ch) :
         ex,err=create_db(database,ch)
@@ -99,7 +99,10 @@ while ch not in quit  :
     elif check_use_db(ch):
         db_name=''
         if '-i' in ch.lower().split():
-            db_name=show_db(database)[int(ch.split()[3])-1]
+            try:
+                db_name=show_db(database)[int(ch.split()[3])-1]
+            except IndexError:
+                pass
         else:
             db_name=ch.split()[2]
 
@@ -159,19 +162,26 @@ while ch not in quit  :
 
     elif check_desc_table(ch):
         print()
-        data,cols,num,tbl_name=desc_table(database,ch,current_db)
-        print(tabulate(data,headers=cols,tablefmt="github"))
-        print()
-        print(f"Total Columns present in {tbl_name}: {num}")
-        print()
+        try:
+            data,cols,num,tbl_name=desc_table(database,ch,current_db)
+            print(tabulate(data,headers=cols,tablefmt="github"))
+            print()
+            print(f"Total Columns present in {tbl_name}: {num}")
+            print()
+        except TypeError:
+            pass
+
     
     elif check_display_data(ch):
         print()
-        data,cols,num,tbl_name=display_data(database,ch,current_db)
-        print(tabulate(data,headers=cols,tablefmt="github"))
-        print()
-        print(f"Total Records present in {tbl_name}: {num}")
-        print()
+        try:
+            data,cols,num,tbl_name=display_data(database,ch,current_db)
+            print(tabulate(data,headers=cols,tablefmt="github"))
+            print()
+            print(f"Total Records present in {tbl_name}: {num}")
+            print()
+        except TypeError:
+            pass
     
     elif check_drop_db(ch):
         ex,err=drop_db(database,ch)
@@ -235,7 +245,7 @@ while ch not in quit  :
             print()
     
     elif check_add_column(ch):
-        ex.err=add_column(database,ch,current_db)
+        ex,err=add_column(database,ch,current_db)
         if ex == True:
             print()
             col_name=ch.split()[1].strip()
@@ -297,6 +307,12 @@ while ch not in quit  :
         else:
             print()
             print(f' Error--> {err}')
+            print()
+
+    elif check_help(ch):
+        with open('queries.txt','r',newline='') as file:
+            for line in file:
+                print(line)
             print()
 
     elif ch == '':

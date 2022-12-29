@@ -9,3 +9,6 @@ else:
 
 print(db_name)
 
+#cd "x:/Python Programs/Project_Sequel/"
+#venv/Scripts/Activate.ps1
+#mysql -u root -pblackpearl -D project

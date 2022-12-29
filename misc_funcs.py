@@ -142,3 +142,7 @@ def check_rename_column(ch):
 def check_modify_data(ch):
     if ch.lower().startswith('modify data'):
         return True
+
+def check_help(ch):
+    if ch.lower() == 'h' or ch.lower() == 'help':
+        return True
