@@ -1,0 +1,121 @@
+
+#mysql -u root -pblackpearl -D project
+
+HELP--->
+
+help
+h
+
+create database <db_name> --> 
+
+make database with name <db_name>
+make db with name <db_name>
+mk db with name <db_name>
+mk database with name <db_name>
+
+show databases --> 
+
+list databases
+ld
+list db
+show databases
+list database
+show db
+
+use <db_name> --> 
+
+switch database <db_name>
+sw database <db_name>
+sh database <db_name>
+switch db <db_name>
+sw db <db_name>
+sh db <db_name>
+
+Current database --> 
+
+curr database
+current database
+current db
+curr db
+
+show tables   -->  
+
+list tables
+lt
+list tbl
+show tables
+list table
+show tbl
+
+create table <table_name> (cols) -->
+
+make table with name <table_name> (cols)
+mk table with name <table_name> (cols)
+make tbl with name <table_name> (cols)
+mk tbl with name <table_name> (cols)
+
+describe <table_name> --> 
+
+specifiy <table_name>
+detail <table_name>
+define <table_name>
+represent <table_name>
+describe <table_name>
+spec <table_name>
+dtl <table_name>
+def <table_name>
+rep <table_name>
+desc <table_name>
+
+select * from <table_name> --> 
+
+from <table_name> display <cols> when <field> == <some_data> 
+
+drop database <db_name> --> 
+
+delete database <db_name>
+remove database <db_name>
+del database <db_name>
+rm database <db_name>
+del db <db_name>
+rm db <db_name>
+
+drop table <tbl_name> -->   
+
+delete table <tbl_name>
+remove table <tbl_name>
+del table <tbl_name>
+rm table <tbl_name>
+del tbl <tbl_name>
+rm tbl <tbl_name>
+
+insert into <tbl_name> values() --> 
+
+add data () to <tbl_name> [(cols)]
+
+Csv convertor --> 
+
+convert <tbl_name> to file.csv [when col = smt]
+
+Rename Table --> 
+
+rename table <tbl_name> to <new_name>
+
+Add column --> 
+
+add <column_name> <definations> [after|first column] to <table>
+
+Modify column --> 
+
+modify column <column_name> <definations> [after|first column] in table <table>  
+
+Rename column --> 
+
+rename column <column_anme> to <new_name> <new definations> in table <table>
+
+Delete column --> 
+
+delete column <column_name> in <table>
+remove column <column_name> in <table>
+del column <column_name> in <table>
+rm column <column_name> in <table>
